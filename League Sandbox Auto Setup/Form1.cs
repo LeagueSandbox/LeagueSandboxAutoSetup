@@ -37,8 +37,7 @@ namespace League_Sandbox_Auto_Setup
             installDirectoryText.Enabled = false;
             startButton.Enabled = false;
             Directory.CreateDirectory(installDirectoryText.Text);
-            startUnzippingClient(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client.7z"));
-            //startCloningRepositories();
+            startCloningRepositories();
         }
 
         private void startCloningRepositories()
