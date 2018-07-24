@@ -97,6 +97,7 @@
             this.cloningProgressLabel.Size = new System.Drawing.Size(18, 13);
             this.cloningProgressLabel.TabIndex = 5;
             this.cloningProgressLabel.Text = "❌";
+            this.cloningProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // downloadingProgressLabel
             // 
