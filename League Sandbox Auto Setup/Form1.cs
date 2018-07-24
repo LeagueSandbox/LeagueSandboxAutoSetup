@@ -10,11 +10,17 @@ using System.Windows.Forms;
 
 namespace League_Sandbox_Auto_Setup
 {
-    public partial class Form1 : Form
+    public partial class leagueSandboxAutoSetupForm : Form
     {
-        public Form1()
+        public leagueSandboxAutoSetupForm()
         {
             InitializeComponent();
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            installDirectoryText.Enabled = false;
+            
         }
     }
 }
