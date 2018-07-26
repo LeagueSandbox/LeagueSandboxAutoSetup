@@ -83,7 +83,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(228, 120);
+            this.label3.Location = new System.Drawing.Point(240, 120);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(131, 13);
             this.label3.TabIndex = 4;
@@ -91,18 +91,18 @@
             // 
             // cloningProgressLabel
             // 
-            this.cloningProgressLabel.Location = new System.Drawing.Point(23, 120);
+            this.cloningProgressLabel.Location = new System.Drawing.Point(12, 120);
             this.cloningProgressLabel.Name = "cloningProgressLabel";
-            this.cloningProgressLabel.Size = new System.Drawing.Size(199, 13);
+            this.cloningProgressLabel.Size = new System.Drawing.Size(222, 13);
             this.cloningProgressLabel.TabIndex = 5;
             this.cloningProgressLabel.Text = "❌";
             this.cloningProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // downloadingProgressLabel
             // 
-            this.downloadingProgressLabel.Location = new System.Drawing.Point(20, 145);
+            this.downloadingProgressLabel.Location = new System.Drawing.Point(12, 145);
             this.downloadingProgressLabel.Name = "downloadingProgressLabel";
-            this.downloadingProgressLabel.Size = new System.Drawing.Size(202, 13);
+            this.downloadingProgressLabel.Size = new System.Drawing.Size(222, 13);
             this.downloadingProgressLabel.TabIndex = 7;
             this.downloadingProgressLabel.Text = "❌";
             this.downloadingProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -110,7 +110,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(228, 145);
+            this.label6.Location = new System.Drawing.Point(240, 145);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(214, 13);
             this.label6.TabIndex = 6;
@@ -118,9 +118,9 @@
             // 
             // unzippingProgressLabel
             // 
-            this.unzippingProgressLabel.Location = new System.Drawing.Point(20, 170);
+            this.unzippingProgressLabel.Location = new System.Drawing.Point(12, 170);
             this.unzippingProgressLabel.Name = "unzippingProgressLabel";
-            this.unzippingProgressLabel.Size = new System.Drawing.Size(202, 13);
+            this.unzippingProgressLabel.Size = new System.Drawing.Size(222, 13);
             this.unzippingProgressLabel.TabIndex = 9;
             this.unzippingProgressLabel.Text = "❌";
             this.unzippingProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -128,7 +128,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(228, 170);
+            this.label8.Location = new System.Drawing.Point(240, 170);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(199, 13);
             this.label8.TabIndex = 8;
@@ -136,9 +136,9 @@
             // 
             // launchingProgressLabel
             // 
-            this.launchingProgressLabel.Location = new System.Drawing.Point(20, 194);
+            this.launchingProgressLabel.Location = new System.Drawing.Point(12, 194);
             this.launchingProgressLabel.Name = "launchingProgressLabel";
-            this.launchingProgressLabel.Size = new System.Drawing.Size(202, 13);
+            this.launchingProgressLabel.Size = new System.Drawing.Size(222, 13);
             this.launchingProgressLabel.TabIndex = 11;
             this.launchingProgressLabel.Text = "❌";
             this.launchingProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -146,7 +146,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(228, 194);
+            this.label10.Location = new System.Drawing.Point(240, 194);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(173, 13);
             this.label10.TabIndex = 10;
@@ -154,9 +154,9 @@
             // 
             // finishProgressLabel
             // 
-            this.finishProgressLabel.Location = new System.Drawing.Point(20, 217);
+            this.finishProgressLabel.Location = new System.Drawing.Point(12, 217);
             this.finishProgressLabel.Name = "finishProgressLabel";
-            this.finishProgressLabel.Size = new System.Drawing.Size(202, 13);
+            this.finishProgressLabel.Size = new System.Drawing.Size(222, 13);
             this.finishProgressLabel.TabIndex = 13;
             this.finishProgressLabel.Text = "❌";
             this.finishProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -164,7 +164,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(228, 217);
+            this.label12.Location = new System.Drawing.Point(240, 217);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(142, 13);
             this.label12.TabIndex = 12;
@@ -174,7 +174,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(467, 258);
+            this.ClientSize = new System.Drawing.Size(508, 258);
             this.Controls.Add(this.finishProgressLabel);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.launchingProgressLabel);
