@@ -1,15 +1,8 @@
 ﻿using LibGit2Sharp;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using SegmentDownloader.Core;
 using SegmentDownloader.Protocol;
@@ -17,15 +10,8 @@ using SharpCompress.Archives;
 using SharpCompress.Readers;
 using SharpCompress.Common;
 using System.Diagnostics;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NuGet.Client;
-using NuGet.Common;
-using NuGet.ContentModel;
-using NuGet.Frameworks;
-using NuGet.Packaging;
-using NuGet.Repositories;
-using NuGet.RuntimeModel;
+using League_Sandbox_Auto_Setup.Util;
 
 namespace League_Sandbox_Auto_Setup
 {
@@ -46,9 +32,7 @@ namespace League_Sandbox_Auto_Setup
             installDirectoryText.Enabled = false;
             startButton.Enabled = false;
             Directory.CreateDirectory(installDirectoryText.Text);
-            //startCloningRepositories();
-
-            startVisualStudioFirstRun(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client"));
+            startCloningRepositories();
         }
 
         private void startCloningRepositories()
@@ -121,8 +105,7 @@ namespace League_Sandbox_Auto_Setup
                 {
                     cloningProgressLabel.Text = "✔️";
 
-                    startVisualStudioFirstRun(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client"));
-                    //startDownloadingClient();
+                    startDownloadingClient();
                 }));
             }).Start();
         }
@@ -241,23 +224,25 @@ namespace League_Sandbox_Auto_Setup
             launchingProgressLabel.Text = "Downloading Nuget";
             //Download Nuget to restore packages
             String nugetLink = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe";
-            String nugetLocation = Path.GetFullPath(Path.Combine(leagueInstallFolder, "nuget.exe"));
+            String nugetLocation = Path.GetFullPath(Path.Combine(installDirectoryText.Text, "nuget.exe"));
             if (File.Exists(nugetLocation))
             {
                 File.Delete(nugetLocation);
             }
 
-            DownloadFile(nugetLink, nugetLocation, (progress)=> {
+            Download.File(nugetLink, nugetLocation, (progress)=> {
                 launchingProgressLabel.Text = "Downloading Nuget: " + progress + "%";
             }, ()=> {
                 launchingProgressLabel.Text = "Getting Dependencies";
                 
                 System.Diagnostics.Process nugetProcess = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo nugetStartInfo = new System.Diagnostics.ProcessStartInfo();
+                nugetStartInfo.WorkingDirectory = gameServerFolder;
                 nugetStartInfo.FileName = nugetLocation;
                 nugetStartInfo.Arguments = $"restore \"{gameServerFolder}\"";
                 nugetProcess.StartInfo = nugetStartInfo;
                 nugetProcess.Start();
+                nugetProcess.WaitForExit();
 
                 File.Delete(nugetLocation);
 
@@ -265,7 +250,7 @@ namespace League_Sandbox_Auto_Setup
 
                 var solutionPath = Path.GetFullPath(Path.Combine(gameServerFolder, "GameServer.sln"));
 
-                var allFiles = GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "devenv.com").ToList();
+                var allFiles = Search.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "devenv.com").ToList();
 
                 if (allFiles.Count > 0)
                 {
@@ -284,50 +269,13 @@ namespace League_Sandbox_Auto_Setup
                     startInfo.Arguments = $"\"{solutionPath}\" /Command \"Debug.Start\"";
                     process.StartInfo = startInfo;
                     process.Start();
+                    unzippingProgressLabel.Text = "✔️";
+                    finishProgressLabel.Text = "✔️";
+                } else
+                {
+                    launchingProgressLabel.Text = "Could not find Visual Studio";
                 }
             });
-        }
-
-        public static IEnumerable<string> GetFiles(string root, string searchPattern)
-        {
-            Stack<string> pending = new Stack<string>();
-            pending.Push(root);
-            while (pending.Count != 0)
-            {
-                var path = pending.Pop();
-                string[] next = null;
-                try
-                {
-                    next = Directory.GetFiles(path, searchPattern);
-                }
-                catch { }
-                if (next != null && next.Length != 0)
-                    foreach (var file in next) yield return file;
-                try
-                {
-                    next = Directory.GetDirectories(path);
-                    foreach (var subdir in next) pending.Push(subdir);
-                }
-                catch { }
-            }
-        }
-
-        public static void DownloadFile(String link, String location, Action<int> downloadProgress, Action finishedDownload)
-        {
-            using (WebClient wc = new WebClient())
-            {
-                wc.Proxy = null;
-                wc.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-                wc.DownloadProgressChanged += (_, progress) =>
-                {
-                    downloadProgress((int)progress.ProgressPercentage);
-                };
-                wc.DownloadDataCompleted += (_, _2) =>
-                {
-                    finishedDownload();
-                };
-                wc.DownloadFileAsync(new System.Uri(link), location);
-            }
         }
     }
 }
