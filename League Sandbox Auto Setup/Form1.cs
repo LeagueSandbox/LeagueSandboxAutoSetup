@@ -95,7 +95,7 @@ namespace League_Sandbox_Auto_Setup
                         }));
                     }
                 };
-                options.BranchName = "ClientAutoLauncher";
+                options.BranchName = "Indev";
                 options.RecurseSubmodules = true;
                 if (!Directory.Exists(cloningPath))
                 {
