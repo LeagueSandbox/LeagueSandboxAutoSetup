@@ -17,6 +17,7 @@ namespace League_Sandbox_Auto_Setup
 {
     public partial class leagueSandboxAutoSetupForm : Form
     {
+        static string Client_Folder_Name = "League_Sandbox_Client";
         public leagueSandboxAutoSetupForm()
         {
             InitializeComponent();
@@ -118,8 +119,7 @@ namespace League_Sandbox_Auto_Setup
             var resourceLocation = ResourceLocation.FromURL("http://gamemakersgarage.com/League_Sandbox_Client.7z");
             // local file path
             var uri = new Uri("http://gamemakersgarage.com/League_Sandbox_Client.7z");
-            var fileName = uri.Segments.Last();
-            var localFilePath = Path.Combine(installDirectoryText.Text, fileName);
+            var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
             if (File.Exists(localFilePath))
             {
                 File.Delete(localFilePath);
@@ -135,7 +135,7 @@ namespace League_Sandbox_Auto_Setup
                 {
                     timer.Stop();
                     downloadingProgressLabel.Text = "✔️";
-                    startUnzippingClient(localFilePath);
+                    startUnzippingClient();
                 }));
             };
 
@@ -150,10 +150,11 @@ namespace League_Sandbox_Auto_Setup
             };
             timer.Start();
         }
-        private void startUnzippingClient(String localFilePath)
+        private void startUnzippingClient()
         {
+            var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
             unzippingProgressLabel.Text = "--";
-            var directoryPath = Path.GetDirectoryName(localFilePath);
+            var directoryPath = installDirectoryText.Text;
 
             new Thread(() =>
             {
@@ -192,12 +193,13 @@ namespace League_Sandbox_Auto_Setup
                 unzippingProgressLabel.Invoke(new Action(() =>
                 {
                     unzippingProgressLabel.Text = "✔️";
-                    startVisualStudioFirstRun(localFilePath);
+                    startVisualStudioFirstRun();
                 }));
             }).Start();
         }
-        private void startVisualStudioFirstRun(String leagueInstallFolder)
+        private void startVisualStudioFirstRun()
         {
+            var leagueInstallFolder = Path.GetFullPath(Path.Combine(installDirectoryText.Text, Client_Folder_Name));
             launchingProgressLabel.Text = "Setting up Configs";
 
             //Set up GameServer configs
