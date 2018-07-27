@@ -242,6 +242,7 @@ namespace League_Sandbox_Auto_Setup
                 nugetStartInfo.WorkingDirectory = gameServerFolder;
                 nugetStartInfo.FileName = nugetLocation;
                 nugetStartInfo.Arguments = $"restore \"{gameServerFolder}\"";
+                nugetStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 nugetProcess.StartInfo = nugetStartInfo;
                 nugetProcess.Start();
                 nugetProcess.WaitForExit();
@@ -256,22 +257,24 @@ namespace League_Sandbox_Auto_Setup
 
                 if (allFiles.Count > 0)
                 {
+                    //Might want to make this pick the newest devenv.
                     var devenvPath = allFiles[0];
 
                     launchingProgressLabel.Text = "Starting Visual Studio";
 
-                    //Run build
+                    //Run build -- Not Necessary?
                     //"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.com" "C:/LeagueSandbox/GameServer/GameServer.sln" /build Debug
 
                     //Open in visual studio and run
                     //"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" "C:/LeagueSandbox/GameServer/GameServer.sln" /Command "Debug.Start"
                     System.Diagnostics.Process process = new System.Diagnostics.Process();
                     System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     startInfo.FileName = devenvPath;
                     startInfo.Arguments = $"\"{solutionPath}\" /Command \"Debug.Start\"";
                     process.StartInfo = startInfo;
                     process.Start();
-                    unzippingProgressLabel.Text = "✔️";
+                    launchingProgressLabel.Text = "✔️";
                     finishProgressLabel.Text = "✔️";
                 } else
                 {
