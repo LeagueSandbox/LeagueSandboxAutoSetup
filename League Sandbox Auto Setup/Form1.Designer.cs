@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(leagueSandboxAutoSetupForm));
             this.label1 = new System.Windows.Forms.Label();
             this.installDirectoryText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -211,6 +212,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.installDirectoryText);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "leagueSandboxAutoSetupForm";
             this.Text = "League Sandbox Auto Setup";
             this.ResumeLayout(false);
