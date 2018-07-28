@@ -193,9 +193,67 @@ namespace League_Sandbox_Auto_Setup
                 unzippingProgressLabel.Invoke(new Action(() =>
                 {
                     unzippingProgressLabel.Text = "✔️";
-                    startVisualStudioFirstRun();
+                    startSettingUpTestbox();
                 }));
             }).Start();
+        }
+        private void startSettingUpTestbox()
+        {
+            String testboxLink = "http://gamemakersgarage.com/LeagueUI.7z";
+            String testboxLocation = Path.GetFullPath(Path.Combine(installDirectoryText.Text, "LeagueUI.7z"));
+            if (File.Exists(testboxLocation))
+            {
+                File.Delete(testboxLocation);
+            }
+
+            Download.File(testboxLink, testboxLocation, (progress) =>
+            {
+                installingTestboxLabel.Text = "Downloading Testbox: " + progress + "%";
+            }, () =>
+            {
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+
+                    var entryCount = 0;
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    using (var archive = ArchiveFactory.Open(testboxLocation, new ReaderOptions() { LookForHeader = true }))
+                    {
+                        var reader = archive.ExtractAllEntries();
+                        while (reader.MoveToNextEntry())
+                        {
+                            if (stopwatch.Elapsed.Milliseconds >= 100)
+                            {
+                                installingTestboxLabel.Invoke(new Action(() =>
+                                {
+                                    installingTestboxLabel.Text = $"{Math.Round((double)entryCount / archive.Entries.Count() * 100, 2)}% - {entryCount} / {archive.Entries.Count()} files";
+                                }));
+                                stopwatch.Restart();
+                            }
+                            reader.WriteEntryToDirectory(installDirectoryText.Text,
+                                new ExtractionOptions()
+                                {
+                                    ExtractFullPath = true,
+                                    Overwrite = true,
+                                    PreserveAttributes = true,
+                                    PreserveFileTime = true
+                                });
+                            entryCount += 1;
+                        }
+                    }
+
+                    File.Delete(testboxLocation);
+
+                    unzippingProgressLabel.Invoke(new Action(() =>
+                    {
+                        string desktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                        Utility.CreateShortcut("LeagueUI", desktopDirectory, Path.GetFullPath(Path.Combine(installDirectoryText.Text, "LeagueUI", "LeagueUI.exe")), "League Sandbox Matchmaking Client", Path.GetFullPath(Path.Combine(installDirectoryText.Text, "LeagueUI", "assets", "sandbox-app-icon.ico")));
+                        installingTestboxLabel.Text = "✔️";
+                        startVisualStudioFirstRun();
+                    }));
+                }).Start();
+            });
         }
         private void startVisualStudioFirstRun()
         {

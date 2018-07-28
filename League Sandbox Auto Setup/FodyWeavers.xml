@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Weavers>
+  <costura IncludeDebugSymbls='false' CreateTemporaryAssemblies='true' DisableCompression='true'>
+    <Unmanaged32Assemblies>
+      git2-6311e88
+    </Unmanaged32Assemblies>
+    <Unmanaged64Assemblies>
+      git2-6311e88
+    </Unmanaged64Assemblies>
+  </costura>
+</Weavers>
