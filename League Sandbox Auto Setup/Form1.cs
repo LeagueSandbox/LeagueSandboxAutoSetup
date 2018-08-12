@@ -12,6 +12,8 @@ using SharpCompress.Common;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using League_Sandbox_Auto_Setup.Util;
+using System.Collections.Generic;
+using Microsoft.Win32;
 
 namespace League_Sandbox_Auto_Setup
 {
@@ -309,35 +311,61 @@ namespace League_Sandbox_Auto_Setup
 
                 launchingProgressLabel.Text = "Looking for Visual Studio";
 
+                List<string> allFiles = new List<string>();
+                String devenvPath;
+
+                try
+                {
+                    using (RegistryKey key = Registry.LocalMachine
+                        .OpenSubKey("Software\\Wow6432Node\\Microsoft\\VisualStudio\\SxS\\VS7"))
+                    {
+                        if (key != null)
+                        {
+                            String[] tmp = key.GetValueNames();
+
+
+                            foreach (string str in tmp)
+                            {
+                                allFiles.Add(key.GetValue(str).ToString());
+                            }
+
+                            //Should always pick the latest version of VS installed
+                            devenvPath = allFiles[0] + "Common7\\IDE\\devenv.exe";
+                        }
+                        else
+                        {
+                            launchingProgressLabel.Text = "Could not find Visual Studio";
+                            return;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    launchingProgressLabel.Text = "Defaulting to fallback method";
+                    allFiles = Search.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder
+                        .ProgramFilesX86), "devenv.com").ToList();
+                    devenvPath = allFiles[0];
+                }
+
+
                 var solutionPath = Path.GetFullPath(Path.Combine(gameServerFolder, "GameServer.sln"));
 
-                var allFiles = Search.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "devenv.com").ToList();
+                launchingProgressLabel.Text = "Starting Visual Studio";
 
-                if (allFiles.Count > 0)
-                {
-                    //Might want to make this pick the newest devenv.
-                    var devenvPath = allFiles[0];
+                //Run build -- Not Necessary?
+                //"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.com" "C:/LeagueSandbox/GameServer/GameServer.sln" /build Debug
 
-                    launchingProgressLabel.Text = "Starting Visual Studio";
-
-                    //Run build -- Not Necessary?
-                    //"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.com" "C:/LeagueSandbox/GameServer/GameServer.sln" /build Debug
-
-                    //Open in visual studio and run
-                    //"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" "C:/LeagueSandbox/GameServer/GameServer.sln" /Command "Debug.Start"
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    startInfo.FileName = devenvPath;
-                    startInfo.Arguments = $"\"{solutionPath}\" /Command \"Debug.Start\"";
-                    process.StartInfo = startInfo;
-                    process.Start();
-                    launchingProgressLabel.Text = "✔️";
-                    finishProgressLabel.Text = "✔️";
-                } else
-                {
-                    launchingProgressLabel.Text = "Could not find Visual Studio";
-                }
+                //Open in visual studio and run
+                //"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" "C:/LeagueSandbox/GameServer/GameServer.sln" /Command "Debug.Start"
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = devenvPath;
+                startInfo.Arguments = $"\"{solutionPath}\" /Command \"Debug.Start\"";
+                process.StartInfo = startInfo;
+                process.Start();
+                launchingProgressLabel.Text = "✔️";
+                finishProgressLabel.Text = "✔️";
             });
         }
     }
