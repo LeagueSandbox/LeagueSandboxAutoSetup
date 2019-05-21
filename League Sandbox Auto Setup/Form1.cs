@@ -376,12 +376,12 @@ namespace League_Sandbox_Auto_Setup
 
         private void BrowseButton_Click(object sender, EventArgs e)
         {
-            using (var SelectPath = new FolderBrowserDialog())
+            using (var selectPath = new FolderBrowserDialog())
             {
-                var result = SelectPath.ShowDialog();
+                var result = selectPath.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(SelectPath.SelectedPath))
-                    installDirectoryText.Text = SelectPath.SelectedPath;
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(selectPath.SelectedPath))
+                    installDirectoryText.Text = selectPath.SelectedPath;
             }
         }
     }
