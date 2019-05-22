@@ -45,6 +45,8 @@
             this.label12 = new System.Windows.Forms.Label();
             this.installingTestboxLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.abortText = new System.Windows.Forms.Label();
+            this.browseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -62,7 +64,7 @@
             this.installDirectoryText.Name = "installDirectoryText";
             this.installDirectoryText.Size = new System.Drawing.Size(213, 20);
             this.installDirectoryText.TabIndex = 1;
-            this.installDirectoryText.Text = "C:/LeagueSandbox";
+            this.installDirectoryText.Text = "C:\\LeagueSandbox";
             // 
             // label2
             // 
@@ -75,7 +77,7 @@
             // 
             // startButton
             // 
-            this.startButton.Location = new System.Drawing.Point(197, 69);
+            this.startButton.Location = new System.Drawing.Point(446, 35);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(75, 23);
             this.startButton.TabIndex = 3;
@@ -191,11 +193,33 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Installing LeagueUI(Testbox) Multiplayer Matchmaker";
             // 
+            // abortText
+            // 
+            this.abortText.AutoSize = true;
+            this.abortText.ForeColor = System.Drawing.Color.Maroon;
+            this.abortText.Location = new System.Drawing.Point(46, 58);
+            this.abortText.Name = "abortText";
+            this.abortText.Size = new System.Drawing.Size(292, 13);
+            this.abortText.TabIndex = 16;
+            this.abortText.Text = "Current operation will be aborted at the next task completion.";
+            // 
+            // browseButton
+            // 
+            this.browseButton.Location = new System.Drawing.Point(446, 9);
+            this.browseButton.Name = "browseButton";
+            this.browseButton.Size = new System.Drawing.Size(75, 23);
+            this.browseButton.TabIndex = 17;
+            this.browseButton.Text = "Browse";
+            this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.BrowseButton_Click);
+            // 
             // leagueSandboxAutoSetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(508, 258);
+            this.ClientSize = new System.Drawing.Size(542, 258);
+            this.Controls.Add(this.browseButton);
+            this.Controls.Add(this.abortText);
             this.Controls.Add(this.installingTestboxLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.finishProgressLabel);
@@ -238,6 +262,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label installingTestboxLabel;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label abortText;
+        private System.Windows.Forms.Button browseButton;
     }
 }
 

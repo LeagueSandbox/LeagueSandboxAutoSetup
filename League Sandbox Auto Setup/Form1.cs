@@ -18,6 +18,8 @@ namespace League_Sandbox_Auto_Setup
     public partial class leagueSandboxAutoSetupForm : Form
     {
         static string Client_Folder_Name = "League_Sandbox_Client";
+        private bool _abortInitiated;
+        private bool _setupStarted;
         public leagueSandboxAutoSetupForm()
         {
             InitializeComponent();
@@ -27,13 +29,32 @@ namespace League_Sandbox_Auto_Setup
                 Environment.Exit(0);
             };
         }
+        private void OnAbortSuccessfully()
+        {
+            _setupStarted = false;
+            _abortInitiated = false;
+            startButton.Enabled = true;
+            abortText.Visible = false;
+        }
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            installDirectoryText.Enabled = false;
-            startButton.Enabled = false;
-            Directory.CreateDirectory(installDirectoryText.Text);
-            startCloningRepositories();
+            if (!_setupStarted)
+            {
+                installDirectoryText.Enabled = false;
+                browseButton.Enabled = false;
+                startButton.Text = "Abort";
+                Directory.CreateDirectory(installDirectoryText.Text);
+                startCloningRepositories();
+                _setupStarted = true;
+            }
+            else
+            {
+                _abortInitiated = true;
+                abortText.Visible = true;
+                startButton.Text = "Start";
+                startButton.Enabled = false;
+            }
         }
 
         private void startCloningRepositories()
@@ -113,6 +134,12 @@ namespace League_Sandbox_Auto_Setup
 
         private void startDownloadingClient()
         {
+            if (_abortInitiated)
+            {
+                OnAbortSuccessfully();
+                return;
+            }
+
             downloadingProgressLabel.Text = "--";
 
             ProtocolProviderFactory.RegisterProtocolHandler("http", typeof(HttpProtocolProvider));
@@ -199,6 +226,12 @@ namespace League_Sandbox_Auto_Setup
         }
         private void startSettingUpTestbox()
         {
+            if (_abortInitiated)
+            {
+                OnAbortSuccessfully();
+                return;
+            }
+
             String testboxLink = "http://gamemakersgarage.com/LeagueUI.7z";
             String testboxLocation = Path.GetFullPath(Path.Combine(installDirectoryText.Text, "LeagueUI.7z"));
             if (File.Exists(testboxLocation))
@@ -262,11 +295,11 @@ namespace League_Sandbox_Auto_Setup
 
             //Set up GameServer configs
             var gameServerFolder = Path.Combine(installDirectoryText.Text, "GameServer");
-            var templatePath = Path.Combine(gameServerFolder, "GameServerApp\\Settings\\GameServerSettings.json.template");
-            var newPath = Path.Combine(gameServerFolder, "GameServerApp\\Settings\\GameServerSettings.json");
+            var templatePath = Path.Combine(gameServerFolder, "GameServerConsole\\Settings\\GameServerSettings.json.template");
+            var newPath = Path.Combine(gameServerFolder, "GameServerConsole\\Settings\\GameServerSettings.json");
             var templateString = File.ReadAllText(templatePath);
-            var configTemplatePath = Path.Combine(gameServerFolder, "GameServerApp\\Settings\\GameInfo.json.template");
-            var configNewPath = Path.Combine(gameServerFolder, "GameServerApp\\Settings\\GameInfo.json");
+            var configTemplatePath = Path.Combine(gameServerFolder, "GameServerConsole\\Settings\\GameInfo.json.template");
+            var configNewPath = Path.Combine(gameServerFolder, "GameServerConsole\\Settings\\GameInfo.json");
             if (File.Exists(newPath))
             {
                 File.Delete(newPath);
@@ -339,6 +372,17 @@ namespace League_Sandbox_Auto_Setup
                     launchingProgressLabel.Text = "Could not find Visual Studio";
                 }
             });
+        }
+
+        private void BrowseButton_Click(object sender, EventArgs e)
+        {
+            using (var selectPath = new FolderBrowserDialog())
+            {
+                var result = selectPath.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(selectPath.SelectedPath))
+                    installDirectoryText.Text = selectPath.SelectedPath;
+            }
         }
     }
 }
