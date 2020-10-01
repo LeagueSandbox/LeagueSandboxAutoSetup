@@ -12,6 +12,8 @@ using SharpCompress.Common;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using League_Sandbox_Auto_Setup.Util;
+using System.Net;
+using SegmentDownloader.Core.Instrumentation;
 
 namespace League_Sandbox_Auto_Setup
 {
@@ -36,11 +38,17 @@ namespace League_Sandbox_Auto_Setup
             startButton.Enabled = true;
             abortText.Visible = false;
         }
-
+        bool convertProjectsToX86 = false;
         private void startButton_Click(object sender, EventArgs e)
         {
             if (!_setupStarted)
             {
+                convertProjectsToX86 = 
+                    MessageBox.Show("Would you like to convert all projects to x86 - " +
+                    "currently fixes DLL issues with: ENet DLL for x64/AnyCpu?", 
+                    "Convert to x86",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+
                 installDirectoryText.Enabled = false;
                 browseButton.Enabled = false;
                 startButton.Text = "Abort";
@@ -49,7 +57,7 @@ namespace League_Sandbox_Auto_Setup
                 _setupStarted = true;
             }
             else
-            {
+            {                
                 _abortInitiated = true;
                 abortText.Visible = true;
                 startButton.Text = "Start";
@@ -117,19 +125,49 @@ namespace League_Sandbox_Auto_Setup
                     }
                 };
                 options.BranchName = "Indev";
-                options.RecurseSubmodules = true;
+                options.RecurseSubmodules = false;                
+
+//                git submodule init
+//git submodule update
+
                 if (!Directory.Exists(cloningPath))
                 {
                     Directory.CreateDirectory(cloningPath);
                     Repository.Clone("https://github.com/LeagueSandbox/GameServer", cloningPath, options);
+                    options.BranchName = "master";
+                    Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "GameServer\\LeaguePackets"), options);
                 }
                 cloningProgressLabel.Invoke(new Action(() =>
                 {
                     cloningProgressLabel.Text = "✔️";
 
+                    
+
+                    if(convertProjectsToX86)
+                    {
+                        convertProjectsToX86AterCloning(cloningPath);
+                    }
+
                     startDownloadingClient();
                 }));
             }).Start();
+        }
+
+        private void convertProjectsToX86AterCloning(string cloningPath)
+        {
+            foreach (var item in Directory.GetFiles(cloningPath))
+            {
+                if( Path.GetExtension(item).ToLower() == ".csproj")
+                {
+                    File.WriteAllText(item, File.ReadAllText(item).
+                        Replace("<Prefer32Bit>false</Prefer32Bit>", "<Prefer32Bit>true</Prefer32Bit>"));                    
+                }
+            }
+
+            foreach (var item in Directory.GetDirectories(cloningPath))
+            {
+                convertProjectsToX86AterCloning(item);
+            }
         }
 
         private void startDownloadingClient()
@@ -140,42 +178,64 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-            downloadingProgressLabel.Text = "--";
+            // downloadingProgressLabel.Text = "--";
+            // ProtocolProviderFactory.RegisterProtocolHandler("http",
+            //typeof(HttpProtocolProvider));
+            // ProtocolProviderFactory.RegisterProtocolHandler("https",
+            //     typeof(HttpProtocolProvider));
 
-            ProtocolProviderFactory.RegisterProtocolHandler("http", typeof(HttpProtocolProvider));
-            var resourceLocation = ResourceLocation.FromURL("http://gamemakersgarage.com/League_Sandbox_Client.7z");
-            // local file path
-            var uri = new Uri("http://gamemakersgarage.com/League_Sandbox_Client.7z");
+            // var resourceLocation = ResourceLocation.FromURL("https://drive.google.com/u/0/uc?export=download&confirm=iupg&id=1vr6kGpDK1Hq3Loh8-2z7dlmXSCGKqY2Z");
+            // // local file path
+            // var uri = new Uri("https://drive.google.com/u/0/uc?export=download&confirm=iupg&id=1vr6kGpDK1Hq3Loh8-2z7dlmXSCGKqY2Z");
             var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
             if (File.Exists(localFilePath))
             {
                 File.Delete(localFilePath);
             }
+            Process.Start(installDirectoryText.Text);
+            Process.Start("https://drive.google.com/open?id=1vr6kGpDK1Hq3Loh8-2z7dlmXSCGKqY2Z");
 
-            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            timer.Interval = 100;
+            downloadingProgressLabel.Text = $"Please download .7z to: {installDirectoryText.Text} and name it: {Client_Folder_Name}.7z";
 
-            // register download ended event
-            DownloadManager.Instance.DownloadEnded += (_, _2) =>
+            Clipboard.SetText(localFilePath);
+
+            while (!File.Exists(localFilePath))
             {
-                downloadingProgressLabel.Invoke(new Action(() =>
-                {
-                    timer.Stop();
-                    downloadingProgressLabel.Text = "✔️";
-                    startUnzippingClient();
-                }));
-            };
+                if (_abortInitiated)
+                    return;
 
-            // create downloader with 8 segments
-            var downloader = DownloadManager.Instance.Add(resourceLocation, null, localFilePath, 25, false);
-            // start download
-            downloader.Start();
+                Application.DoEvents();
 
-            timer.Tick += (_, _2) =>
-            {
-                downloadingProgressLabel.Text = $"{Math.Round(downloader.Progress, 2)}% - {Math.Round(downloader.Rate / 1024 / 1024, 2)} MB/s";
-            };
-            timer.Start();
+                Thread.Sleep(1);
+            }
+
+            downloadingProgressLabel.Text = "✔️";
+            startUnzippingClient();
+
+            //System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            //timer.Interval = 100;
+
+            //// register download ended event
+            //DownloadManager.Instance.DownloadEnded += (_, _2) =>
+            //{
+            //    downloadingProgressLabel.Invoke(new Action(() =>
+            //    {
+            //        timer.Stop();
+            //        downloadingProgressLabel.Text = "✔️";
+            //        startUnzippingClient();
+            //    }));
+            //};
+
+            //// create downloader with 8 segments
+            //var downloader = DownloadManager.Instance.Add(resourceLocation, null, localFilePath, 25, false);
+            //// start download
+            //downloader.Start();
+
+            //timer.Tick += (_, _2) =>
+            //{
+            //    downloadingProgressLabel.Text = $"{Math.Round(downloader.Progress, 2)}% - {Math.Round(downloader.Rate / 1024 / 1024, 2)} MB/s";
+            //};
+            //timer.Start();
         }
         private void startUnzippingClient()
         {
