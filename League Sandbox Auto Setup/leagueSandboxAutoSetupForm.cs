@@ -28,7 +28,20 @@ namespace League_Sandbox_Auto_Setup
 
             this.FormClosing += (_, _2) =>
             {
-                Environment.Exit(0);
+                try
+                {
+                    _abortInitiated = true;
+                    abortText.Visible = true;
+                    startButton.Text = "Start";
+                    startButton.Enabled = false;
+
+                    Environment.Exit(0);
+                }
+                catch (Exception)
+                {
+
+                }
+                
             };
         }
         private void OnAbortSuccessfully()
@@ -135,7 +148,9 @@ namespace League_Sandbox_Auto_Setup
                     Directory.CreateDirectory(cloningPath);
                     Repository.Clone("https://github.com/LeagueSandbox/GameServer", cloningPath, options);
                     options.BranchName = "master";
-                    Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "GameServer\\LeaguePackets"), options);
+                    Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "LeaguePackets"), options);
+                    options.BranchName = "indev";
+                    Repository.Clone("https://github.com/LeagueSandbox/LeagueSandbox-Default", Path.Combine(cloningPath, "Content\\LeagueSandbox-Default"), options);                    
                 }
                 cloningProgressLabel.Invoke(new Action(() =>
                 {
@@ -159,8 +174,23 @@ namespace League_Sandbox_Auto_Setup
             {
                 if( Path.GetExtension(item).ToLower() == ".csproj")
                 {
-                    File.WriteAllText(item, File.ReadAllText(item).
-                        Replace("<Prefer32Bit>false</Prefer32Bit>", "<Prefer32Bit>true</Prefer32Bit>"));                    
+                    var text = File.ReadAllText(item);
+
+                    if(text.Contains("<Prefer32Bit>false</Prefer32Bit>"))
+                    {
+                        File.WriteAllText(item, text.
+                            Replace("<Prefer32Bit>false</Prefer32Bit>", "<Prefer32Bit>true</Prefer32Bit>").
+                            Replace("<PlatformTarget>AnyCPU</PlatformTarget>", "<PlatformTarget>x86</PlatformTarget>"));
+                    }
+                    else
+                    {
+                        File.WriteAllText(item, File.ReadAllText(item).
+                            Replace("</Project>", @"
+<PropertyGroup Condition=""'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"">
+    <PlatformTarget>x86</PlatformTarget>
+</PropertyGroup>
+</Project>"));
+                    }
                 }
             }
 
@@ -177,6 +207,25 @@ namespace League_Sandbox_Auto_Setup
                 OnAbortSuccessfully();
                 return;
             }
+            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED")))
+            {
+                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED"), Path.Combine(installDirectoryText.Text, "League of Legends"));
+            }
+
+            //League_Sandbox_Client
+
+            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends")))
+            {
+                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends"), Path.Combine(installDirectoryText.Text, "League_Sandbox_Client"));
+            }
+
+            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client")))
+            {                
+                downloadingProgressLabel.Text = "✔️";
+                startUnzippingClient();
+                return;
+            }
+
 
             // downloadingProgressLabel.Text = "--";
             // ProtocolProviderFactory.RegisterProtocolHandler("http",
@@ -239,6 +288,21 @@ namespace League_Sandbox_Auto_Setup
         }
         private void startUnzippingClient()
         {
+            if(Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED")))
+            {
+                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED"), Path.Combine(installDirectoryText.Text, "League of Legends"));
+            }
+            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends")))
+            {
+                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends"), Path.Combine(installDirectoryText.Text, "League_Sandbox_Client"));
+            }
+            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client")))
+            {
+                unzippingProgressLabel.Text = "✔️";
+                startSettingUpTestbox();
+                return;
+            }
+
             var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
             unzippingProgressLabel.Text = "--";
             var directoryPath = installDirectoryText.Text;
@@ -289,6 +353,13 @@ namespace League_Sandbox_Auto_Setup
             if (_abortInitiated)
             {
                 OnAbortSuccessfully();
+                return;
+            }
+
+            if(Directory.Exists(Path.Combine(installDirectoryText.Text, "LeagueUI")))
+            {
+                installingTestboxLabel.Text = "✔️";
+                startVisualStudioFirstRun();
                 return;
             }
 
@@ -369,10 +440,13 @@ namespace League_Sandbox_Auto_Setup
                 File.Delete(configNewPath);
             }
             JObject json = JObject.Parse(templateString);
-            json["clientLocation"] = leagueInstallFolder;
+            //C:\LeagueSandbox\League_Sandbox_Client\League-of-Legends-4-20\RADS\solutions\lol_game_client_sln\releases\0.0.1.68\deploy
+            json["clientLocation"] = Path.Combine(leagueInstallFolder, @"League-of-Legends-4-20\RADS\solutions\lol_game_client_sln\releases\0.0.1.68\deploy\League of Legends.exe");
             json["autoStartClient"] = true;
             File.WriteAllText(newPath, json.ToString());
             File.Copy(configTemplatePath, configNewPath);
+
+            File.WriteAllText(templatePath, json.ToString());
 
             launchingProgressLabel.Text = "Downloading Nuget";
             //Download Nuget to restore packages
