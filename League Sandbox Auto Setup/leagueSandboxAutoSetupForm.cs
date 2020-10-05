@@ -4,16 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using SegmentDownloader.Core;
-using SegmentDownloader.Protocol;
 using SharpCompress.Archives;
 using SharpCompress.Readers;
 using SharpCompress.Common;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using League_Sandbox_Auto_Setup.Util;
-using System.Net;
-using SegmentDownloader.Core.Instrumentation;
 
 namespace League_Sandbox_Auto_Setup
 {
@@ -72,7 +68,7 @@ namespace League_Sandbox_Auto_Setup
                 _setupStarted = true;
             }
             else
-            {                
+            {
                 _abortInitiated = true;
                 abortText.Visible = true;
                 startButton.Text = "Start";
@@ -162,7 +158,7 @@ namespace League_Sandbox_Auto_Setup
 
                     if(_convertProjectsToX86)
                     {
-                        convertProjectsToX86AterCloning(cloningPath);
+                        convertProjectsToX86AfterCloning(cloningPath);
                     }
 
                     startDownloadingClient();
@@ -170,7 +166,7 @@ namespace League_Sandbox_Auto_Setup
             }).Start();
         }
 
-        private void convertProjectsToX86AterCloning(string cloningPath)
+        private void convertProjectsToX86AfterCloning(string cloningPath)
         {
             foreach (var item in Directory.GetFiles(cloningPath))
             {
@@ -198,7 +194,7 @@ namespace League_Sandbox_Auto_Setup
 
             foreach (var item in Directory.GetDirectories(cloningPath))
             {
-                convertProjectsToX86AterCloning(item);
+                convertProjectsToX86AfterCloning(item);
             }
         }
 
@@ -228,16 +224,6 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-
-            // downloadingProgressLabel.Text = "--";
-            // ProtocolProviderFactory.RegisterProtocolHandler("http",
-            //typeof(HttpProtocolProvider));
-            // ProtocolProviderFactory.RegisterProtocolHandler("https",
-            //     typeof(HttpProtocolProvider));
-
-            // var resourceLocation = ResourceLocation.FromURL("https://drive.google.com/u/0/uc?export=download&confirm=iupg&id=1vr6kGpDK1Hq3Loh8-2z7dlmXSCGKqY2Z");
-            // // local file path
-            // var uri = new Uri("https://drive.google.com/u/0/uc?export=download&confirm=iupg&id=1vr6kGpDK1Hq3Loh8-2z7dlmXSCGKqY2Z");
             var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
             if (File.Exists(localFilePath))
             {
@@ -262,31 +248,6 @@ namespace League_Sandbox_Auto_Setup
 
             downloadingProgressLabel.Text = "✔️";
             startUnzippingClient();
-
-            //System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            //timer.Interval = 100;
-
-            //// register download ended event
-            //DownloadManager.Instance.DownloadEnded += (_, _2) =>
-            //{
-            //    downloadingProgressLabel.Invoke(new Action(() =>
-            //    {
-            //        timer.Stop();
-            //        downloadingProgressLabel.Text = "✔️";
-            //        startUnzippingClient();
-            //    }));
-            //};
-
-            //// create downloader with 8 segments
-            //var downloader = DownloadManager.Instance.Add(resourceLocation, null, localFilePath, 25, false);
-            //// start download
-            //downloader.Start();
-
-            //timer.Tick += (_, _2) =>
-            //{
-            //    downloadingProgressLabel.Text = $"{Math.Round(downloader.Progress, 2)}% - {Math.Round(downloader.Rate / 1024 / 1024, 2)} MB/s";
-            //};
-            //timer.Start();
         }
         private void startUnzippingClient()
         {
