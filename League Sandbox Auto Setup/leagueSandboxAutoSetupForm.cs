@@ -22,6 +22,8 @@ namespace League_Sandbox_Auto_Setup
         static string Client_Folder_Name = "League_Sandbox_Client";
         private bool _abortInitiated;
         private bool _setupStarted;
+        private bool _convertProjectsToX86;
+
         public leagueSandboxAutoSetupForm()
         {
             InitializeComponent();
@@ -51,12 +53,12 @@ namespace League_Sandbox_Auto_Setup
             startButton.Enabled = true;
             abortText.Visible = false;
         }
-        bool convertProjectsToX86 = false;
+        
         private void startButton_Click(object sender, EventArgs e)
         {
             if (!_setupStarted)
             {
-                convertProjectsToX86 = 
+                _convertProjectsToX86 = 
                     MessageBox.Show("Would you like to convert all projects to x86 - " +
                     "currently fixes DLL issues with: ENet DLL for x64/AnyCpu?", 
                     "Convert to x86",
@@ -158,7 +160,7 @@ namespace League_Sandbox_Auto_Setup
 
                     
 
-                    if(convertProjectsToX86)
+                    if(_convertProjectsToX86)
                     {
                         convertProjectsToX86AterCloning(cloningPath);
                     }
