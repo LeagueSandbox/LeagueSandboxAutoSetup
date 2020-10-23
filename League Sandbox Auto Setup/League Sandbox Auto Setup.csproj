@@ -155,11 +155,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="leagueSandboxAutoSetupForm.cs">
+    <Compile Include="LeagueSandboxAutoSetupForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="leagueSandboxAutoSetupForm.Designer.cs">
-      <DependentUpon>leagueSandboxAutoSetupForm.cs</DependentUpon>
+      <DependentUpon>LeagueSandboxAutoSetupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -167,7 +167,7 @@
     <Compile Include="Util\Search.cs" />
     <Compile Include="Util\Utility.cs" />
     <EmbeddedResource Include="leagueSandboxAutoSetupForm.resx">
-      <DependentUpon>leagueSandboxAutoSetupForm.cs</DependentUpon>
+      <DependentUpon>LeagueSandboxAutoSetupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

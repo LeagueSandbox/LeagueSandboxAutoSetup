@@ -13,14 +13,14 @@ using League_Sandbox_Auto_Setup.Util;
 
 namespace League_Sandbox_Auto_Setup
 {
-    public partial class leagueSandboxAutoSetupForm : Form
+    public partial class LeagueSandboxAutoSetupForm : Form
     {
         static string Client_Folder_Name = "League_Sandbox_Client";
         private bool _abortInitiated;
         private bool _setupStarted;
         private bool _convertProjectsToX86;
 
-        public leagueSandboxAutoSetupForm()
+        public LeagueSandboxAutoSetupForm()
         {
             InitializeComponent();
 

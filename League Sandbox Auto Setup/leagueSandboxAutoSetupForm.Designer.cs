@@ -1,6 +1,6 @@
 ﻿namespace League_Sandbox_Auto_Setup
 {
-    partial class leagueSandboxAutoSetupForm
+    partial class LeagueSandboxAutoSetupForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(leagueSandboxAutoSetupForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeagueSandboxAutoSetupForm));
             this.label1 = new System.Windows.Forms.Label();
             this.installDirectoryText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
