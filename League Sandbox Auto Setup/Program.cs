@@ -16,7 +16,7 @@ namespace League_Sandbox_Auto_Setup
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new leagueSandboxAutoSetupForm());
+            Application.Run(new LeagueSandboxAutoSetupForm());
         }
     }
 }
