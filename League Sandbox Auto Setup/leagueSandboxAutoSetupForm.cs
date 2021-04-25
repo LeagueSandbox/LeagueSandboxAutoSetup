@@ -15,7 +15,6 @@ namespace League_Sandbox_Auto_Setup
 {
     public partial class LeagueSandboxAutoSetupForm : Form
     {
-        static string Client_Folder_Name = "League_Sandbox_Client";
         private bool _abortInitiated;
         private bool _setupStarted;
         private bool _convertProjectsToX86;
@@ -148,7 +147,7 @@ namespace League_Sandbox_Auto_Setup
                     options.BranchName = "master";
                     Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "LeaguePackets"), options);
                     options.BranchName = "indev";
-                    Repository.Clone("https://github.com/LeagueSandbox/LeagueSandbox-Default", Path.Combine(cloningPath, "Content\\LeagueSandbox-Default"), options);                    
+                    Repository.Clone("https://github.com/LeagueSandbox/LeagueSandbox-Default", Path.Combine(cloningPath, "Content\\LeagueSandbox-Default"), options);
                 }
                 cloningProgressLabel.Invoke(new Action(() =>
                 {
@@ -205,34 +204,19 @@ namespace League_Sandbox_Auto_Setup
                 OnAbortSuccessfully();
                 return;
             }
-            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED")))
+
+            var localFilePath = Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20.7z");
+            if (File.Exists(localFilePath))
             {
-                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED"), Path.Combine(installDirectoryText.Text, "League of Legends"));
-            }
-
-            //League_Sandbox_Client
-
-            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends")))
-            {
-                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends"), Path.Combine(installDirectoryText.Text, "League_Sandbox_Client"));
-            }
-
-            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client")))
-            {                
                 downloadingProgressLabel.Text = "✔️";
                 startUnzippingClient();
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
-            if (File.Exists(localFilePath))
-            {
-                File.Delete(localFilePath);
-            }
             Process.Start(installDirectoryText.Text);
-            Process.Start("https://drive.google.com/open?id=1vr6kGpDK1Hq3Loh8-2z7dlmXSCGKqY2Z");
+            Process.Start("https://drive.google.com/open?id=12sWXWPQdTDIpNTJMOygC61zS7DnoFLfy");
 
-            downloadingProgressLabel.Text = $"Please download .7z to: {installDirectoryText.Text} and name it: {Client_Folder_Name}.7z";
+            downloadingProgressLabel.Text = $"Please download League-of-Legends-4-20.7z and move it to: {installDirectoryText.Text}";
 
             Clipboard.SetText(localFilePath);
 
@@ -251,22 +235,14 @@ namespace League_Sandbox_Auto_Setup
         }
         private void startUnzippingClient()
         {
-            if(Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED")))
-            {
-                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends_UNPACKED"), Path.Combine(installDirectoryText.Text, "League of Legends"));
-            }
-            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League of Legends")))
-            {
-                Directory.Move(Path.Combine(installDirectoryText.Text, "League of Legends"), Path.Combine(installDirectoryText.Text, "League_Sandbox_Client"));
-            }
-            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League_Sandbox_Client")))
+            if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20")))
             {
                 unzippingProgressLabel.Text = "✔️";
                 startSettingUpTestbox();
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, Client_Folder_Name + ".7z");
+            var localFilePath = Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20.7z");
             unzippingProgressLabel.Text = "--";
             var directoryPath = installDirectoryText.Text;
 
@@ -384,7 +360,7 @@ namespace League_Sandbox_Auto_Setup
         }
         private void startVisualStudioFirstRun()
         {
-            var leagueInstallFolder = Path.GetFullPath(Path.Combine(installDirectoryText.Text, Client_Folder_Name));
+            var leagueInstallFolder = Path.GetFullPath(Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20"));
             launchingProgressLabel.Text = "Setting up Configs";
 
             //Set up GameServer configs
@@ -403,8 +379,8 @@ namespace League_Sandbox_Auto_Setup
                 File.Delete(configNewPath);
             }
             JObject json = JObject.Parse(templateString);
-            //C:\LeagueSandbox\League_Sandbox_Client\League-of-Legends-4-20\RADS\solutions\lol_game_client_sln\releases\0.0.1.68\deploy
-            json["clientLocation"] = Path.Combine(leagueInstallFolder, @"League-of-Legends-4-20\RADS\solutions\lol_game_client_sln\releases\0.0.1.68\deploy\League of Legends.exe");
+            //C:\LeagueSandbox\League-of-Legends-4-20\RADS\solutions\lol_game_client_sln\releases\0.0.1.68\deploy
+            json["clientLocation"] = Path.Combine(leagueInstallFolder, @"RADS\solutions\lol_game_client_sln\releases\0.0.1.68\deploy\League of Legends.exe");
             json["autoStartClient"] = true;
             File.WriteAllText(newPath, json.ToString());
             File.Copy(configTemplatePath, configNewPath);
