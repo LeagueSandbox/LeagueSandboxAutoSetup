@@ -216,7 +216,7 @@ namespace League_Sandbox_Auto_Setup
             Process.Start(installDirectoryText.Text);
             Process.Start("https://drive.google.com/open?id=12sWXWPQdTDIpNTJMOygC61zS7DnoFLfy");
 
-            downloadingProgressLabel.Text = $"Please download League-of-Legends-4-20.7z and move it to: {installDirectoryText.Text}";
+            downloadingProgressLabel.Text = "Please download League-of-Legends-4-20.7z" + Environment.NewLine + $"and move it to: {installDirectoryText.Text}";
 
             Clipboard.SetText(localFilePath);
 
@@ -456,6 +456,16 @@ namespace League_Sandbox_Auto_Setup
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(selectPath.SelectedPath))
                     installDirectoryText.Text = selectPath.SelectedPath;
             }
+        }
+
+        private void cloningProgressLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void downloadingProgressLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
