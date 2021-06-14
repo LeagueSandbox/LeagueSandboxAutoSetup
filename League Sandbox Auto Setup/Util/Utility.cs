@@ -37,7 +37,7 @@ namespace League_Sandbox_Auto_Setup.Util
                         throw;
                 }
             }
-            throw new Exception("Failed perform action within allotted time.");
+            throw new Exception("Failed to perform action within timeout.");
         }
     }
 }
