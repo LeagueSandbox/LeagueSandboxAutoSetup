@@ -440,6 +440,10 @@ namespace League_Sandbox_Auto_Setup
                     process.Start();
                     launchingProgressLabel.Text = "✔️";
                     finishProgressLabel.Text = "✔️";
+
+                    MessageBox.Show("AutoSetup completed ✔️","League Sandbox Auto Setup",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Application.Exit();
                 } else
                 {
                     launchingProgressLabel.Text = "Could not find Visual Studio";
