@@ -458,14 +458,5 @@ namespace League_Sandbox_Auto_Setup
             }
         }
 
-        private void cloningProgressLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void downloadingProgressLabel_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

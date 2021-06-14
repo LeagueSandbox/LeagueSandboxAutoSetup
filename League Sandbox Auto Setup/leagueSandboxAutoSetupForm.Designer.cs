@@ -102,7 +102,6 @@
             this.cloningProgressLabel.TabIndex = 5;
             this.cloningProgressLabel.Text = "❌";
             this.cloningProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cloningProgressLabel.Click += new System.EventHandler(this.cloningProgressLabel_Click);
             // 
             // downloadingProgressLabel
             // 
@@ -112,7 +111,6 @@
             this.downloadingProgressLabel.TabIndex = 7;
             this.downloadingProgressLabel.Text = "❌";
             this.downloadingProgressLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.downloadingProgressLabel.Click += new System.EventHandler(this.downloadingProgressLabel_Click);
             // 
             // label6
             // 
