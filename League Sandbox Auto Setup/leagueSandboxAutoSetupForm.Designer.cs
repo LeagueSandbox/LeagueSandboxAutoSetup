@@ -105,12 +105,12 @@
             // 
             // downloadingProgressLabel
             // 
-            this.downloadingProgressLabel.Location = new System.Drawing.Point(12, 111);
+            this.downloadingProgressLabel.Location = new System.Drawing.Point(12, 88);
             this.downloadingProgressLabel.Name = "downloadingProgressLabel";
-            this.downloadingProgressLabel.Size = new System.Drawing.Size(246, 13);
+            this.downloadingProgressLabel.Size = new System.Drawing.Size(246, 36);
             this.downloadingProgressLabel.TabIndex = 7;
             this.downloadingProgressLabel.Text = "❌";
-            this.downloadingProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.downloadingProgressLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // label6
             // 
@@ -213,7 +213,7 @@
             this.browseButton.UseVisualStyleBackColor = true;
             this.browseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
-            // leagueSandboxAutoSetupForm
+            // LeagueSandboxAutoSetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -240,7 +240,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "leagueSandboxAutoSetupForm";
+            this.Name = "LeagueSandboxAutoSetupForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "League Sandbox Auto Setup";
             this.ResumeLayout(false);
