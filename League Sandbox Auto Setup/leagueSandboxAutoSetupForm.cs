@@ -216,8 +216,8 @@ namespace League_Sandbox_Auto_Setup
 
             Process.Start(installDirectoryText.Text);
             Process.Start("https://drive.google.com/open?id=12sWXWPQdTDIpNTJMOygC61zS7DnoFLfy");
-
-            downloadingProgressLabel.Text = $"Please download {clientArchive} and move it to: {installDirectoryText.Text}";
+            
+            downloadingProgressLabel.Text = "Please download {clientArchive}" + Environment.NewLine + $"and move it to: {installDirectoryText.Text}";
 
             Clipboard.SetText(localFilePath);
 
@@ -460,5 +460,6 @@ namespace League_Sandbox_Auto_Setup
                     installDirectoryText.Text = selectPath.SelectedPath;
             }
         }
+
     }
 }
