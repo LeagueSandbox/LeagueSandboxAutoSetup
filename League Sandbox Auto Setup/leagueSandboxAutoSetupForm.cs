@@ -18,6 +18,7 @@ namespace League_Sandbox_Auto_Setup
         private bool _abortInitiated;
         private bool _setupStarted;
         private bool _convertProjectsToX86;
+        private const string clientArchive = "lol-live-4.20.0.315.7z";
 
         public LeagueSandboxAutoSetupForm()
         {
@@ -205,7 +206,7 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20.7z");
+            var localFilePath = Path.Combine(installDirectoryText.Text, clientArchive);
             if (File.Exists(localFilePath))
             {
                 downloadingProgressLabel.Text = "✔️";
@@ -216,7 +217,7 @@ namespace League_Sandbox_Auto_Setup
             Process.Start(installDirectoryText.Text);
             Process.Start("https://drive.google.com/open?id=12sWXWPQdTDIpNTJMOygC61zS7DnoFLfy");
 
-            downloadingProgressLabel.Text = $"Please download League-of-Legends-4-20.7z and move it to: {installDirectoryText.Text}";
+            downloadingProgressLabel.Text = $"Please download {clientArchive} and move it to: {installDirectoryText.Text}";
 
             Clipboard.SetText(localFilePath);
 
@@ -242,7 +243,7 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20.7z");
+            var localFilePath = Path.Combine(installDirectoryText.Text, clientArchive);
             unzippingProgressLabel.Text = "--";
             var directoryPath = installDirectoryText.Text;
 
@@ -253,6 +254,8 @@ namespace League_Sandbox_Auto_Setup
                 var entryCount = 0;
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
+                // WaitForFile is used to wait for access to zip file while it's copyed by user from Downloads folder to installDirectory
+                Utility.WaitForFile(() => ArchiveFactory.Open(localFilePath, new ReaderOptions() { LookForHeader = true }));
                 using (var archive = ArchiveFactory.Open(localFilePath, new ReaderOptions() { LookForHeader = true }))
                 {
                     var reader = archive.ExtractAllEntries();
