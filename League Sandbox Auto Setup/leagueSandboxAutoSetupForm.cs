@@ -75,6 +75,19 @@ namespace League_Sandbox_Auto_Setup
             }
         }
 
+        private void setAttributesNormal(DirectoryInfo dir)
+        {
+            foreach (var subDir in dir.GetDirectories())
+            {
+                setAttributesNormal(subDir);
+                subDir.Attributes = FileAttributes.Normal;
+            }
+            foreach (var file in dir.GetFiles())
+            {
+                file.Attributes = FileAttributes.Normal;
+            }
+        }
+
         private void startCloningRepositories()
         {
             cloningProgressLabel.Text = "--";
@@ -143,6 +156,15 @@ namespace League_Sandbox_Auto_Setup
                 if (!Directory.Exists(cloningPath))
                 {
                     Directory.CreateDirectory(cloningPath);
+                }
+                if (Directory.Exists(cloningPath))
+                {
+                    System.IO.DirectoryInfo cloningDir = new System.IO.DirectoryInfo(cloningPath);
+                    // Set attributes in cloningDir to normal, as git files refuse to be deleted
+                    setAttributesNormal(cloningDir);
+                    cloningDir.Delete(true);
+                    Directory.CreateDirectory(cloningPath);
+                }
                     Repository.Clone("https://github.com/LeagueSandbox/GameServer", cloningPath, options);
                     options.BranchName = "master";
                     Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "LeaguePackets"), options);
