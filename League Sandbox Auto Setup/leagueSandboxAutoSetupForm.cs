@@ -142,11 +142,11 @@ namespace League_Sandbox_Auto_Setup
                 if (!Directory.Exists(cloningPath))
                 {
                     Directory.CreateDirectory(cloningPath);
-                    options.BranchName = "Indev";  // Branch for GameServer
+                    options.BranchName = "indev";  // Branch for GameServer
                     Repository.Clone("https://github.com/LeagueSandbox/GameServer", cloningPath, options);
                     options.BranchName = "master"; // Branch for LeaguePackets
                     Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "LeaguePackets"), options);
-                    options.BranchName = "Indev"; // Branch for LeagueSandbox-Default
+                    options.BranchName = "indev"; // Branch for LeagueSandbox-Default
                     Repository.Clone("https://github.com/LeagueSandbox/LeagueSandbox-Default", Path.Combine(cloningPath, "Content\\LeagueSandbox-Default"), options);
                 }
                 cloningProgressLabel.Invoke(new Action(() =>
