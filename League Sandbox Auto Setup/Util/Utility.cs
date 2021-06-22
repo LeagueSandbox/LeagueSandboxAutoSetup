@@ -34,7 +34,9 @@ namespace League_Sandbox_Auto_Setup.Util
                 {
                     // access error
                     if (e.HResult != -2147024864)
+                    {
                         throw;
+                    }
                 }
             }
             throw new Exception("Failed to perform action within timeout.");
