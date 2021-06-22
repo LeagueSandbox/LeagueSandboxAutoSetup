@@ -18,7 +18,7 @@ namespace League_Sandbox_Auto_Setup
         private bool _abortInitiated;
         private bool _setupStarted;
         private bool _convertProjectsToX86;
-        private const string clientArchive = "lol-live-4.20.0.315.7z";
+        private const string ClientArchive = "lol-live-4.20.0.315.7z";
 
         public LeagueSandboxAutoSetupForm()
         {
@@ -50,7 +50,7 @@ namespace League_Sandbox_Auto_Setup
             abortText.Visible = false;
         }
         
-        private void startButton_Click(object sender, EventArgs e)
+        private void StartButton_Click(object sender, EventArgs e)
         {
             if (!_setupStarted)
             {
@@ -64,7 +64,7 @@ namespace League_Sandbox_Auto_Setup
                 browseButton.Enabled = false;
                 startButton.Text = "Abort";
                 Directory.CreateDirectory(installDirectoryText.Text);
-                startCloningRepositories();
+                StartCloningRepositories();
                 _setupStarted = true;
             }
             else
@@ -76,7 +76,7 @@ namespace League_Sandbox_Auto_Setup
             }
         }
 
-        private void startCloningRepositories()
+        private void StartCloningRepositories()
         {
             cloningProgressLabel.Text = "--";
             Directory.CreateDirectory(installDirectoryText.Text);
@@ -158,15 +158,15 @@ namespace League_Sandbox_Auto_Setup
 
                     if(_convertProjectsToX86)
                     {
-                        convertProjectsToX86AfterCloning(cloningPath);
+                        ConvertProjectsToX86AfterCloning(cloningPath);
                     }
 
-                    startDownloadingClient();
+                    StartDownloadingClient();
                 }));
             }).Start();
         }
 
-        private void convertProjectsToX86AfterCloning(string cloningPath)
+        private void ConvertProjectsToX86AfterCloning(string cloningPath)
         {
             foreach (var item in Directory.GetFiles(cloningPath))
             {
@@ -194,11 +194,11 @@ namespace League_Sandbox_Auto_Setup
 
             foreach (var item in Directory.GetDirectories(cloningPath))
             {
-                convertProjectsToX86AfterCloning(item);
+                ConvertProjectsToX86AfterCloning(item);
             }
         }
 
-        private void startDownloadingClient()
+        private void StartDownloadingClient()
         {
             if (_abortInitiated)
             {
@@ -206,11 +206,11 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, clientArchive);
+            var localFilePath = Path.Combine(installDirectoryText.Text, ClientArchive);
             if (File.Exists(localFilePath))
             {
                 downloadingProgressLabel.Text = "✔️";
-                startUnzippingClient();
+                StartUnzippingClient();
                 return;
             }
 
@@ -224,7 +224,9 @@ namespace League_Sandbox_Auto_Setup
             while (!File.Exists(localFilePath))
             {
                 if (_abortInitiated)
+                {
                     return;
+                }
 
                 Application.DoEvents();
 
@@ -232,18 +234,18 @@ namespace League_Sandbox_Auto_Setup
             }
 
             downloadingProgressLabel.Text = "✔️";
-            startUnzippingClient();
+            StartUnzippingClient();
         }
-        private void startUnzippingClient()
+        private void StartUnzippingClient()
         {
             if (Directory.Exists(Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20")))
             {
                 unzippingProgressLabel.Text = "✔️";
-                startSettingUpTestbox();
+                StartSettingUpTestbox();
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, clientArchive);
+            var localFilePath = Path.Combine(installDirectoryText.Text, ClientArchive);
             unzippingProgressLabel.Text = "--";
             var directoryPath = installDirectoryText.Text;
 
@@ -286,11 +288,11 @@ namespace League_Sandbox_Auto_Setup
                 unzippingProgressLabel.Invoke(new Action(() =>
                 {
                     unzippingProgressLabel.Text = "✔️";
-                    startSettingUpTestbox();
+                    StartSettingUpTestbox();
                 }));
             }).Start();
         }
-        private void startSettingUpTestbox()
+        private void StartSettingUpTestbox()
         {
             if (_abortInitiated)
             {
@@ -301,7 +303,7 @@ namespace League_Sandbox_Auto_Setup
             if(Directory.Exists(Path.Combine(installDirectoryText.Text, "LeagueUI")))
             {
                 installingTestboxLabel.Text = "✔️";
-                startVisualStudioFirstRun();
+                StartVisualStudioFirstRun();
                 return;
             }
 
@@ -356,12 +358,12 @@ namespace League_Sandbox_Auto_Setup
                         string desktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                         Utility.CreateShortcut("LeagueUI", desktopDirectory, Path.GetFullPath(Path.Combine(installDirectoryText.Text, "LeagueUI", "LeagueUI.exe")), "League Sandbox Matchmaking Client", Path.GetFullPath(Path.Combine(installDirectoryText.Text, "LeagueUI", "assets", "sandbox-app-icon.ico")));
                         installingTestboxLabel.Text = "✔️";
-                        startVisualStudioFirstRun();
+                        StartVisualStudioFirstRun();
                     }));
                 }).Start();
             });
         }
-        private void startVisualStudioFirstRun()
+        private void StartVisualStudioFirstRun()
         {
             var leagueInstallFolder = Path.GetFullPath(Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20"));
             launchingProgressLabel.Text = "Setting up Configs";
@@ -447,7 +449,8 @@ namespace League_Sandbox_Auto_Setup
                     MessageBox.Show("AutoSetup completed ✔️","League Sandbox Auto Setup",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Application.Exit();
-                } else
+                } 
+                else 
                 {
                     launchingProgressLabel.Text = "Could not find Visual Studio";
                 }
@@ -461,8 +464,11 @@ namespace League_Sandbox_Auto_Setup
                 var result = selectPath.ShowDialog();
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(selectPath.SelectedPath))
+                {
                     installDirectoryText.Text = selectPath.SelectedPath;
+                }
             }
         }
+
     }
 }
