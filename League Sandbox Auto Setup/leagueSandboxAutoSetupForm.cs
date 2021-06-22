@@ -134,19 +134,19 @@ namespace League_Sandbox_Auto_Setup
                         }));
                     }
                 };
-                options.BranchName = "Indev";
                 options.RecurseSubmodules = false;                
 
 //                git submodule init
-//git submodule update
+//                git submodule update
 
                 if (!Directory.Exists(cloningPath))
                 {
                     Directory.CreateDirectory(cloningPath);
+                    options.BranchName = "indev";  // Branch for GameServer
                     Repository.Clone("https://github.com/LeagueSandbox/GameServer", cloningPath, options);
-                    options.BranchName = "master";
+                    options.BranchName = "master"; // Branch for LeaguePackets
                     Repository.Clone("https://github.com/LeagueSandbox/LeaguePackets", Path.Combine(cloningPath, "LeaguePackets"), options);
-                    options.BranchName = "indev";
+                    options.BranchName = "indev"; // Branch for LeagueSandbox-Default
                     Repository.Clone("https://github.com/LeagueSandbox/LeagueSandbox-Default", Path.Combine(cloningPath, "Content\\LeagueSandbox-Default"), options);
                 }
                 cloningProgressLabel.Invoke(new Action(() =>
@@ -461,6 +461,5 @@ namespace League_Sandbox_Auto_Setup
                     installDirectoryText.Text = selectPath.SelectedPath;
             }
         }
-
     }
 }
