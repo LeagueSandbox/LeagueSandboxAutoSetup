@@ -205,7 +205,7 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20.7z");
+            var localFilePath = Path.Combine(installDirectoryText.Text, "lol_game_client_sln_0.0.1.68.7z");
             if (File.Exists(localFilePath))
             {
                 downloadingProgressLabel.Text = "✔️";
@@ -214,9 +214,9 @@ namespace League_Sandbox_Auto_Setup
             }
 
             Process.Start(installDirectoryText.Text);
-            Process.Start("https://drive.google.com/open?id=12sWXWPQdTDIpNTJMOygC61zS7DnoFLfy");
+            Process.Start("https://drive.google.com/open?id=1JVUGe75nMluczrY14xb0KDXiihFRlGnV");
 
-            downloadingProgressLabel.Text = "Please download League-of-Legends-4-20.7z" + Environment.NewLine + $"and move it to: {installDirectoryText.Text}";
+            downloadingProgressLabel.Text = "Please download lol_game_client_sln_0.0.1.68.7z" + Environment.NewLine + $"and move it to: {installDirectoryText.Text}";
 
             Clipboard.SetText(localFilePath);
 
@@ -242,7 +242,7 @@ namespace League_Sandbox_Auto_Setup
                 return;
             }
 
-            var localFilePath = Path.Combine(installDirectoryText.Text, "League-of-Legends-4-20.7z");
+            var localFilePath = Path.Combine(installDirectoryText.Text, "lol_game_client_sln_0.0.1.68.7z");
             unzippingProgressLabel.Text = "--";
             var directoryPath = installDirectoryText.Text;
 
@@ -461,6 +461,5 @@ namespace League_Sandbox_Auto_Setup
                     installDirectoryText.Text = selectPath.SelectedPath;
             }
         }
-
     }
 }
