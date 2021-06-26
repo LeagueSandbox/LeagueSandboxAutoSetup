@@ -1,4 +1,4 @@
-﻿using LibGit2Sharp;
+using LibGit2Sharp;
 using System;
 using System.IO;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace League_Sandbox_Auto_Setup
         private bool _abortInitiated;
         private bool _setupStarted;
         private bool _convertProjectsToX86;
-        private const string ClientArchive = "lol-live-4.20.0.315.7z";
+        private const string ClientArchive = "lol_game_client_sln_0.0.1.68.7z";
 
         public LeagueSandboxAutoSetupForm()
         {
@@ -205,7 +205,6 @@ namespace League_Sandbox_Auto_Setup
                 OnAbortSuccessfully();
                 return;
             }
-
             var localFilePath = Path.Combine(installDirectoryText.Text, ClientArchive);
             if (File.Exists(localFilePath))
             {
@@ -215,8 +214,7 @@ namespace League_Sandbox_Auto_Setup
             }
 
             Process.Start(installDirectoryText.Text);
-            Process.Start("https://drive.google.com/open?id=12sWXWPQdTDIpNTJMOygC61zS7DnoFLfy");
-            
+            Process.Start("https://drive.google.com/open?id=1JVUGe75nMluczrY14xb0KDXiihFRlGnV");
             downloadingProgressLabel.Text = "Please download {clientArchive}" + Environment.NewLine + $"and move it to: {installDirectoryText.Text}";
 
             Clipboard.SetText(localFilePath);
@@ -469,6 +467,5 @@ namespace League_Sandbox_Auto_Setup
                 }
             }
         }
-
     }
 }
