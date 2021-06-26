@@ -18,12 +18,22 @@ namespace League_Sandbox_Auto_Setup.Util
                     next = Directory.GetFiles(path, searchPattern);
                 }
                 catch { }
+
                 if (next != null && next.Length != 0)
-                    foreach (var file in next) yield return file;
+                {
+                    foreach (var file in next)
+                    {
+                        yield return file;
+                    }
+                }
+
                 try
                 {
                     next = Directory.GetDirectories(path);
-                    foreach (var subdir in next) pending.Push(subdir);
+                    foreach (var subdir in next)
+                    {
+                        pending.Push(subdir);
+                    }
                 }
                 catch { }
             }

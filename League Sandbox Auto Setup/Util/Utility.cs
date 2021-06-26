@@ -1,5 +1,6 @@
 ﻿using IWshRuntimeLibrary;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace League_Sandbox_Auto_Setup.Util
@@ -17,6 +18,28 @@ namespace League_Sandbox_Auto_Setup.Util
             shortcut.IconLocation = iconPath;           // The icon of the shortcut
             shortcut.TargetPath = targetFileLocation;                 // The path of the file that will launch when the shortcut is run
             shortcut.Save();                                    // Save the shortcut
+        }
+
+        public static void WaitForFile(Action action, int timeoutMs = 300000)
+        {
+            var time = Stopwatch.StartNew();
+            while (time.ElapsedMilliseconds < timeoutMs) // Default timeout is 5 mins
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (IOException e)
+                {
+                    // access error
+                    if (e.HResult != -2147024864)
+                    {
+                        throw;
+                    }
+                }
+            }
+            throw new Exception("Failed to perform action within timeout.");
         }
     }
 }
